@@ -1,0 +1,66 @@
+SELECT *
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+LIMIT 5;
+-- 1. Find the total number of complaints present in the dataset.
+SELECT COUNT(*) AS total_complaints
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+-- 2. Find the top 5 products that received the highest number of complaints.
+SELECT product, COUNT(complaint_id) AS complaint_count
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+GROUP BY product
+ORDER BY complaint_count DESC
+LIMIT 5;
+-- 3. Count how many complaints were submitted via each submission channel (e.g., Web, Referral, Phone).
+SELECT submitted_via AS submission_channel, 
+ COUNT(complaint_id) AS complaint_count
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+GROUP BY submission_channel
+ORDER BY complaint_count;
+-- 4. Find the percentage of complaints that received a timely response versus those that did not.
+SELECT 
+    timely_response,
+    COUNT(*) AS complaint_count,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) AS percentage
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+GROUP BY timely_response;
+-- 5. List the top 10 companies with the highest volume of consumer complaints.
+SELECT company,COUNT(complaint_id) AS complaint_count
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+GROUP BY company
+ORDER BY complaint_count DESC
+LIMIT 10;
+-- 6. Find the top 5 states where consumers experience the highest number of issues.
+SELECT state,COUNT(complaint_id) AS complaint_count
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+GROUP BY state
+ORDER BY complaint_count DESC
+LIMIT 5;
+-- 7. Count how many complaints resulted in a consumer dispute (Consumer_disputed = 'Yes' vs 'No').
+SELECT 
+    company_public_response,
+    COUNT(*) AS response_count
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+GROUP BY company_public_response
+ORDER BY response_count DESC;
+-- 8. Find the top 3 most common 'Issue' types reported under the 'Credit reporting' product category.
+SELECT DISTINCT product
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+WHERE LOWER(product) LIKE '%credit%';
+SELECT 
+    issue, 
+    COUNT(*) AS issue_count
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+WHERE product = 'Credit Reporting, Credit Repair Services, Or Other Personal Consumer Reports'
+GROUP BY issue
+ORDER BY issue_count DESC
+LIMIT 3;
+-- 9. Calculate the distribution of complaints based on the year they were received.
+SELECT complaint_year,
+ COUNT(complaint_id) AS complaint_count
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+GROUP BY complaint_year; 
+-- 10. Find all complaints where the company public response indicates a dispute or correction was published.
+SELECT company_public_response,complaint_id,issue
+FROM `complaint-analysis-505504.Complain_analysis_dataset.Complaints`
+WHERE LOWER(company_public_response) LIKE '%dispute%' 
+   OR LOWER(company_public_response) LIKE '%correction%';
