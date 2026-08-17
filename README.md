@@ -1,4 +1,4 @@
-# Customer-Complaint-Analyss
+# Customer-Complaint-Analysis
 
 An end-to-end data analytics project that transforms raw consumer complaint data into actionable insights and a live, interactive web dashboard.
 
